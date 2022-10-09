@@ -1,0 +1,6 @@
+// Bad CERT recommendation: C memory layout not determined by variable locations
+cert-API01-C
+
+// fopen_s is NOT supported on POSIX platforms and DOES NOT APPLY for reading
+// of files!
+cert-MSC24-C
