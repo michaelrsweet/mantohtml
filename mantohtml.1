@@ -1,0 +1,111 @@
+.\"
+.\" Man page for mantohtml program.
+.\"
+.\" Copyright © 2022 by Michael R Sweet
+.\"
+.\" Licensed under Apache License v2.0.
+.\" <https://opensource.org/licenses/Apache-2.0>
+.\"
+.TH mantohtml 1 "2022-10-05"
+.
+.SH NAME
+mantohtml \- convert man page source to html
+.
+.SH SYNOPSIS
+.B mantohtml
+[
+.B \-\-author
+.I AUTHOR
+] [
+.B \-\-chapter
+.I CHAPTER
+] [
+.B \-\-copyright
+.I COPYRIGHT
+] [
+.B \-\-css
+.I CSS-FILE-OR-URL
+] [
+.B \-\-help
+] [
+.B \-\-subject
+.I SUBJECT
+] [
+.B \-\-title
+.I TITLE
+] [
+.B \-\-version
+]
+.I MAN-FILE
+[ ...
+.I MAN-FILE
+] >
+.I HTML-FILE
+.
+.SH DESCRIPTION
+.B mantohtml
+converts
+.BR man (1)
+source files to HTML and writes the result to the standard output.
+.
+.SH OPTIONS
+The following options are recognized by
+.BR mantohtml :
+.TP 5
+\fB\-\-author \fIAUTHOR\fR
+Sets the author metadata of the HTML output.
+.TP 5
+\fB\-\-chapter \fICHAPTER\fR
+Sets the chapter (H1 heading) of the HTML output.
+If specified, each man page starts with a second-level (H2) heading with third-level (H3) sections and fourth-level (H4) sub-sections.
+If not specified, each man page starts with a first-level (H1) heading with second-level (H2) sections and third-level (H3) sub-sections.
+.TP 5
+\fB\-\-copyright \fICOPYRIGHT\fR
+Sets the copyright metadata of the HTML output.
+.TP 5
+\fB\-\-css \fICSS-FILE-OR-URL\fR
+Sets the Cascading Style Sheet (CSS) for the HTML output.
+Files are embedded inline while 'http:' and 'https:' URLs are referenced.
+.TP 5
+.B \-\-help
+Shows program help.
+.TP 5
+\fB\-\-subject \fISUBJECT\fR
+Sets the subject metadata of the HTML output.
+.TP 5
+\fB\-\-title \fITITLE\fR
+Sets the title of the HTML output.
+.TP 5
+.B \-\-version
+Shows program version.
+.
+.SH EXIT STATUS
+.B mantohtml
+returns a non-zero exit status when an error occurs.
+.
+.SH EXAMPLES
+Convert the man page source file
+.I example.1
+to HTML with the default stylesheet, author, and title, with the output sent to the file
+.IR example.html :
+.nf
+
+    mantohtml example.1 >example.html
+
+.fi
+Convert all man pages in the current directory to HTML using the Bootstrap stylesheet:
+.nf
+
+    mantohtml --author "Alex the Author" \e
+        --css https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css \e
+        --title "Alex Project Manual" *.[1-8] >alex-manual.html
+.fi
+.
+.SH COPYRIGHT
+Copyright \[co] 2022 by Michael R Sweet.
+.
+.SH SEE ALSO
+.BR groff_man (7),
+.BR man (1),
+.BR man (7),
+.BR man-pages (7).
