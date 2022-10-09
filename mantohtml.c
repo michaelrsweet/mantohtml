@@ -451,7 +451,7 @@ convert_man(man_state_t *state,		// I - Current man state
       {
         // .IP (indented paragraph)
         char 	tag[256],		// Tag text
-		indent[256];		// Indentation
+		indent[256] = "";	// Indentation
 
         if (parse_value(tag, &lineptr, sizeof(tag)))
           parse_measurement(indent, &lineptr, sizeof(indent), 'n');
