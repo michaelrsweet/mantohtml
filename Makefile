@@ -56,6 +56,9 @@ sanitizer:
 	$(MAKE) OPTIM="-g -fsanitize=address" all
 
 
+test:	$(TARGETS)
+
+
 # Analyze code with the Clang static analyzer <https://clang-analyzer.llvm.org>
 clang:
 	clang $(CPPFLAGS) --analyze $(OBJS:.o=.c) 2>clang.log
