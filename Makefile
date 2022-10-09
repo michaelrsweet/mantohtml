@@ -7,7 +7,7 @@
 # <https://opensource.org/licenses/Apache-2.0>
 #
 
-VERSION	=	2022.1005
+VERSION	=	2022.10
 prefix	=	$(DESTDIR)/usr/local
 bindir	=	$(prefix)/bin
 mandir	=	$(prefix)/share/man

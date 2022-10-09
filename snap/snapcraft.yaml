@@ -1,5 +1,5 @@
 name: mantohtml
-version: 2022.1005
+version: 2022.10
 summary: Man page to HTML converter
 description: |
   mantohtml is a man page to HTML conversion program.  It supports all of the
