@@ -7,6 +7,13 @@
 # <https://opensource.org/licenses/Apache-2.0>
 #
 
+# POSIX makefile
+.POSIX:
+
+# Build silently
+.SILENT:
+
+# Variables
 VERSION	=	2.0
 prefix	=	$(DESTDIR)/usr/local
 bindir	=	$(prefix)/bin
@@ -21,8 +28,10 @@ OBJS	=	mantohtml.o
 OPTIM	=	-Os -g
 TARGETS	=	mantohtml mantohtml.html
 
+# Base rules
 .SUFFIXES:	.c .o
 .c.o:
+	echo Compiling $<...
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 
@@ -34,8 +43,10 @@ clean:
 
 
 install:	$(TARGETS)
+	echo Installing mantohtml to $(bindir)...
 	mkdir -p $(bindir)
 	cp mantohtml $(bindir)
+	echo Installing mantohtml.1 to $(mandir)...
 	mkdir -p $(mandir)/man1
 	cp mantohtml.1 $(mandir)/man1
 
@@ -60,9 +71,11 @@ cppcheck:
 
 # Make various bits...
 mantohtml:	mantohtml.o
+	echo Linking $@...
 	$(CC) $(LDFLAGS) -o $@ mantohtml.o $(LIBS)
 
 $(OBJS):	Makefile
 
 mantohtml.html:	mantohtml.1 mantohtml
+	echo Generating HTML man page...
 	./mantohtml --author "Michael R Sweet" --copyright "Copyright © 2022 by Michael R Sweet" --title "mantohtml Documentation" mantohtml.1 >mantohtml.html

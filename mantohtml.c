@@ -1445,7 +1445,6 @@ man_puts(man_state_t *state,		// I - Current man state
       {
         // Write current fragment...
         fwrite(start, 1, s - start, stdout);
-        start = s;
       }
 
       for (urlptr = url; *s && !isspace(*s & 255) && urlptr < (url + sizeof(url) - 1); s ++)
