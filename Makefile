@@ -57,6 +57,7 @@ sanitizer:
 
 
 test:	$(TARGETS)
+	./mantohtml test.1 >test.html
 
 
 # Analyze code with the Clang static analyzer <https://clang-analyzer.llvm.org>

@@ -1,0 +1,169 @@
+.\" Test file for mantohtml
+.
+.TH test 1
+Text after ".TH".
+.
+.SH SECTION HEADING
+Text after section heading ".SH".
+.
+.SS Sub-Section Heading
+Text after sub-section heading ".SS".
+.P
+Paragraph using ".P". Now is the time for all good men to come to the aid of their country.
+.LP
+Paragraph using ".LP". Now is the time for all good men to come to the aid of their country.
+.PP
+Paragraph using ".PP". Now is the time for all good men to come to the aid of their country.
+.IP
+Indented paragraph (".IP") with default values.
+.IP \(bu
+Bullet paragraph (".IP") with default values.
+.IP \(bu 20
+Bullet paragraph (".IP") with value "20".
+.IP \(bu 2i
+Bullet paragraph (".IP") with value "2i".
+.TP
+Tag
+Tagged paragraph (".TP") with default values.
+.TP 5
+Tag
+Tagged paragraph (".TP") with value "5".
+.TP 2i
+Tag
+Tagged paragraph (".TP") with value "2i".
+.
+.SS Font Styles
+".B" for bold text:
+.B Bold Text.
+.PP
+".BI" for alternating bold and italic:
+.BI Bold Italic Bold Italic.
+.PP
+".BR" for alternating bold and regular:
+.BR foo (1) bar (2) baz (3).
+.PP
+".I" for italic text:
+.I Italic Text.
+.PP
+".IB" for alternating italics and bold:
+.IB Italic Bold Italic Bold.
+.PP
+".IR" for alternating italics and regular:
+.IR Italic Regular Italic Regular.
+.PP
+".RB" for alternating regular and boldface:
+.RB Regular Bold Regular Bold.
+.PP
+".SB" for small boldface:
+.SB small boldface.
+.PP
+".SM" for small:
+.SM small text.
+.
+.SS Links
+".MT" and ".ME" to surround an email address:
+.MT user@example.com
+Alex User
+.ME
+.
+.PP
+".UR" and ".UE" to surround URLs:
+.UR https://www.example.com/
+Example Web Site
+.UE
+.
+.SS Monospaced Text
+".EX" and ".EE" to surround monospaced examples:
+.EX
+#include <stdio.h>
+int
+main(void)
+{
+  puts("Hello, World!");
+}
+.EE
+.
+.PP
+".nf" and ".fi" to surround monospaced examples:
+.nf
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Page title</title>
+  </head>
+  <body>
+    <h1>Page Heading</h1>
+    <p>Now is the time for all good men to come to the aid of their country.</p>
+  </body>
+</html>
+.fi
+.
+.SS Relative Inset
+".RS" and ".RE" to indent blocks:
+.RS
+.PP
+Inset paragraph and example with default value.
+.EX
+#include <stdio.h>
+int
+main(void)
+{
+  puts("Hello, World!");
+}
+.EE
+.RE
+.
+.RS 20
+.PP
+Inset paragraph and example with value of 20.
+.EX
+#include <stdio.h>
+int
+main(void)
+{
+  puts("Hello, World!");
+}
+.EE
+.RE
+.
+.
+.in 10
+.PP
+Inset paragraph and example using ".in" with value of 10.
+.EX
+#include <stdio.h>
+int
+main(void)
+{
+  puts("Hello, World!");
+}
+.EE
+.in
+.
+.SH SYNOPSIS
+Synopsis using ".SY" and ".YS":
+.SY
+.B program
+.B --option
+[
+.B --option
+.I value
+]
+.YS
+.
+.SS Sub-Synopsis
+Sentence with ".br" after "for": Now is the time for
+.br
+all good men to come to the aid of their country.
+Space after ".sp":
+.sp
+This is the rest of the current paragraph.
+This is the rest of the current paragraph.
+This is the rest of the current paragraph.
+This is the rest of the current paragraph.
+This is the rest of the current paragraph.
+This is the rest of the current paragraph.
+This is the rest of the current paragraph.
+This is the rest of the current paragraph.
+This is the rest of the current paragraph.
+This is the rest of the current paragraph.

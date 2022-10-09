@@ -449,9 +449,10 @@ convert_man(man_state_t *state,		// I - Current man state
       }
       else if (!strcmp(macro, ".IP"))
       {
-        // .IP (indented paragraph)
+        // .IP [tag] [indent] (indented paragraph)
         char 	tag[256],		// Tag text
 		indent[256] = "";	// Indentation
+        const char *list = "";		// List style
 
         if (parse_value(tag, &lineptr, sizeof(tag)))
           parse_measurement(indent, &lineptr, sizeof(indent), 'n');
@@ -464,14 +465,21 @@ convert_man(man_state_t *state,		// I - Current man state
 	  state->in_link = false;
 	}
 
-        if (state->in_block)
+        if (state->in_block && strcmp(state->in_block, "ul"))
+        {
           printf("</%s>\n", state->in_block);
+          state->in_block = NULL;
+        }
 
-        printf("    <p style=\"margin-left: %s; text-indent: -%s;\">", indent, indent);
-        state->in_block = "p";
+        if (!state->in_block)
+          puts("    <ul>");
 
-        man_puts(state, tag);
-        puts(break_text);
+        if (strcmp(tag, "\\(bu") && strcmp(tag, "-") && strcmp(tag, "*"))
+          list = "list-style-type: none; ";
+
+        html_printf("    <li style=\"%smargin-left: %s;\">", list, indent);
+        state->in_block = "ul";
+
         break_text = "";
       }
       else if (!strcmp(macro, ".IR"))
@@ -520,10 +528,6 @@ convert_man(man_state_t *state,		// I - Current man state
           state->in_link = true;
         }
       }
-      else if (!strcmp(macro, ".OP"))
-      {
-        // .OP command-line option
-      }
       else if (!strcmp(macro, ".RB"))
       {
         // .RB regular bold
@@ -533,7 +537,7 @@ convert_man(man_state_t *state,		// I - Current man state
           lineptr = line;
         }
 
-        man_xx(state, MAN_FONT_REGULAR, MAN_FONT_BOLD, line);
+        man_xx(state, MAN_FONT_REGULAR, MAN_FONT_BOLD, lineptr);
         puts(break_text);
         break_text = "";
       }
@@ -639,8 +643,8 @@ convert_man(man_state_t *state,		// I - Current man state
         if (state->in_block)
           printf("</%s>\n", state->in_block);
 
-        fputs("    <pre style=\"white-space: pre-wrap;\">", stdout);
-        state->in_block = "pre";
+        fputs("    <p style=\"font-family: monospace;\">", stdout);
+        state->in_block = "p";
       }
       else if (!strcmp(macro, ".TP"))
       {
@@ -663,11 +667,7 @@ convert_man(man_state_t *state,		// I - Current man state
         state->in_block = "p";
         break_text      = "<br>";
       }
-      else if (!strcmp(macro, ".TQ"))
-      {
-        // .TQ (supplemental tagged paragraph)
-      }
-      else if (!strcmp(macro, ".US"))
+      else if (!strcmp(macro, ".UR"))
       {
         // .UR url
         char	url[1024];		// URL value
@@ -681,13 +681,13 @@ convert_man(man_state_t *state,		// I - Current man state
       else if (!strcmp(macro, ".YS"))
       {
         // .YS (end of synopsis)
-        if (!state->in_block || strcmp(state->in_block, "pre"))
+        if (!state->in_block || strcmp(state->in_block, "p"))
         {
           fprintf(stderr, "mantohtml: '.YS' seen without prior '.SY' on line %d of '%s'.\n", linenum, filename);
         }
         else
         {
-          puts("</pre>");
+          puts("</p>");
           state->in_block = NULL;
         }
       }
@@ -705,6 +705,7 @@ convert_man(man_state_t *state,		// I - Current man state
         {
           // Indent...
           printf("    <div style=\"margin-left: %s;\">\n", indent);
+          state->indent ++;
         }
         else if (state->indent > 0)
         {
@@ -1303,7 +1304,14 @@ man_puts(man_state_t *state,		// I - Current man state
       }
       else if (*s == '(')
       {
-        if (!strncmp(s, "(em", 3))
+	if (!strncmp(s, "(bu", 3))
+	{
+	  // Bullet
+	  fputs("&middot;", stdout);
+	  s += 3;
+	  start = s;
+	}
+        else if (!strncmp(s, "(em", 3))
         {
           fputs("&mdash;", stdout);
           s += 3;
@@ -1469,6 +1477,18 @@ man_puts(man_state_t *state,		// I - Current man state
 
       *urlptr = '\0';
       html_printf("<a href=\"%s\">%s</a>", url, url);
+      start = s;
+    }
+    else if (strchr("<\"&", *s))
+    {
+      // Quoted HTML character...
+      if (s > start)
+      {
+	// Write current fragment...
+	fwrite(start, 1, s - start, stdout);
+      }
+
+      html_putc(*s++);
       start = s;
     }
     else
