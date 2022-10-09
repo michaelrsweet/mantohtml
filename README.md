@@ -5,12 +5,10 @@ mantohtml - Man Page to HTML Converter
 ![Apache 2.0](https://img.shields.io/github/license/michaelrsweet/mantohtml)
 ![Build](https://github.com/michaelrsweet/mantohtml/workflows/Build/badge.svg)
 [![Coverity Scan Status](https://img.shields.io/coverity/scan/NNNNN.svg)](https://scan.coverity.com/projects/michaelrsweet-mantohtml)
-[![LGTM Grade](https://img.shields.io/lgtm/grade/cpp/github/michaelrsweet/mantohtml)](https://lgtm.com/projects/g/michaelrsweet/mantohtml/context:cpp)
-[![LGTM Alerts](https://img.shields.io/lgtm/alerts/github/michaelrsweet/mantohtml)](https://lgtm.com/projects/g/michaelrsweet/mantohtml/)
 
-mantohtml is a man page to HTML conversion program.  It supports all of the
-common man/roff macros and can combine multiple man pages in a single HTML
-output file.
+mantohtml is an all-new implementation of a man page to HTML conversion program.
+It supports all of the common man/roff macros and can combine multiple man pages
+in a single HTML output file.
 
 
 Requirements
