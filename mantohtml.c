@@ -1,7 +1,7 @@
 //
 // Man page to HTML conversion program.
 //
-// Copyright © 2022 by Michael R Sweet.
+// Copyright © 2022-2023 by Michael R Sweet.
 //
 // Licensed under Apache License v2.0.
 // <https://opensource.org/licenses/Apache-2.0>
@@ -1244,7 +1244,7 @@ man_puts(man_state_t *state,		// I - Current man state
               break;
         }
 
-        s ++;
+	s ++;
         start = s;
       }
       else if (*s == '*' && s[1])
@@ -1256,7 +1256,6 @@ man_puts(man_state_t *state,		// I - Current man state
         {
           case 'R' :
               fputs("&reg;", stdout);
-              start = s;
               break;
 
           case '(' :
@@ -1264,43 +1263,43 @@ man_puts(man_state_t *state,		// I - Current man state
 	      {
 		putchar('\'');
 		s += 2;
-	        start = s;
 	      }
 	      else if (!strncmp(s, "dq", 2))
 	      {
 		fputs("&quot;", stdout);
 		s += 2;
-	        start = s;
 	      }
 	      else if (!strncmp(s, "lq", 2))
 	      {
 		fputs("&ldquo;", stdout);
 		s += 2;
-	        start = s;
 	      }
 	      else if (!strncmp(s, "rq", 2))
 	      {
 		fputs("&rdquo;", stdout);
 		s += 2;
-	        start = s;
 	      }
               else if (!strncmp(s, "Tm", 2))
               {
                 fputs("<sup>TM</sup>", stdout);
 		s += 2;
-	        start = s;
 	      }
               else
               {
                 fprintf(stderr, "mantohtml: Unknown macro '\\*(%c%c' ignored.\n", s[0], s[1]);
+                if (*s && s[1])
+                  s += 2;
               }
               break;
 
           default :
               fprintf(stderr, "mantohtml: Unknown macro '\\*%c' ignored.\n", *s);
-	      s ++;
+              if (*s)
+	        s ++;
               break;
         }
+
+	start = s;
       }
       else if (*s == '(')
       {

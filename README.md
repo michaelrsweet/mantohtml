@@ -46,7 +46,7 @@ The `--help` option lists the available options:
 Legal Stuff
 -----------
 
-mantohtml is Copyright © 2022 by Michael R Sweet.
+mantohtml is Copyright © 2022-2023 by Michael R Sweet.
 
 This software is licensed under the Apache License Version 2.0.  See the files
 "LICENSE" and "NOTICE" for more information.

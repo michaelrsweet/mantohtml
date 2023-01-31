@@ -14,7 +14,7 @@
 .SILENT:
 
 # Variables
-VERSION	=	2.0
+VERSION	=	2.0.1
 prefix	=	$(DESTDIR)/usr/local
 bindir	=	$(prefix)/bin
 mandir	=	$(prefix)/share/man
@@ -82,4 +82,4 @@ $(OBJS):	Makefile
 
 mantohtml.html:	mantohtml.1 mantohtml
 	echo Generating HTML man page...
-	./mantohtml --author "Michael R Sweet" --copyright "Copyright © 2022 by Michael R Sweet" --title "mantohtml Documentation" mantohtml.1 >mantohtml.html
+	./mantohtml --author "Michael R Sweet" --copyright "Copyright © 2022-2023 by Michael R Sweet" --title "mantohtml Documentation" mantohtml.1 >mantohtml.html
