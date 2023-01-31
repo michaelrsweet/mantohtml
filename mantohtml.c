@@ -1522,7 +1522,7 @@ man_xx(man_state_t *state,		// I - Current man state
 
 
   // Loop until all words are written
-  while (parse_value(word, &line, sizeof(word)))
+  while (parse_value(word, &line, sizeof(word)-1))
   {
     html_font(state, use_a ? a : b);
     use_a = !use_a;
