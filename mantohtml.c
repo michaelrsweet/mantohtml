@@ -17,7 +17,6 @@
 //    --copyright 'COPYRIGHT'  Set copyright metadata
 //    --css CSS-FILE-OR-URL    Use named stylesheet
 //    --help                   Show help
-//    --section 'SECTION'      Set section metadata
 //    --subject 'SUBJECT'      Set subject metadata
 //    --title 'TITLE'          Set output title
 //    --version                Show version
@@ -65,7 +64,6 @@ typedef struct man_state_s		// Current man page state
   const char	*chapter;		// Chapter title
   const char	*copyright;		// Copyright metadata
   const char	*css;			// Stylesheet
-  const char	*section;		// Section metadata
   const char	*subject;		// Subject metadata
   const char	*title;			// Title
   char		atopic[256],		// Current topic (anchor)
@@ -167,18 +165,6 @@ main(int  argc,				// I - Number of command-line args
     {
       // --help
       return (usage(NULL));
-    }
-    else if (!strcmp(argv[i], "--section"))
-    {
-      // --section "SECTION"
-      i ++;
-      if (i >= argc)
-      {
-        fputs("mantohtml: Missing section after --section.\n", stderr);
-        return (1);
-      }
-
-      state.section = argv[i];
     }
     else if (!strcmp(argv[i], "--subject"))
     {
@@ -869,10 +855,6 @@ html_header(man_state_t *state,		// I - Current man state
 
   puts("<!DOCTYPE html>");
   puts("<html>");
-
-  if (state->section)
-    html_printf("<!-- SECTION: %s -->\n", state->section);
-
   puts("  <head>");
   if (state->css)
   {
