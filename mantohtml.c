@@ -17,6 +17,7 @@
 //    --copyright 'COPYRIGHT'  Set copyright metadata
 //    --css CSS-FILE-OR-URL    Use named stylesheet
 //    --help                   Show help
+//    --section 'SECTION'      Set section metadata
 //    --subject 'SUBJECT'      Set subject metadata
 //    --title 'TITLE'          Set output title
 //    --version                Show version
@@ -64,10 +65,11 @@ typedef struct man_state_s		// Current man page state
   const char	*chapter;		// Chapter title
   const char	*copyright;		// Copyright metadata
   const char	*css;			// Stylesheet
+  const char	*section;		// Section metadata
   const char	*subject;		// Subject metadata
   const char	*title;			// Title
-  char		topic[256],		// Current topic (anchor)
-		section[256];		// Current section (anchor)
+  char		atopic[256],		// Current topic (anchor)
+		asection[256];		// Current section (anchor)
   man_font_t	font;			// Current font
 } man_state_t;
 
@@ -80,7 +82,7 @@ static void	convert_man(man_state_t *state, const char *filename);
 static char	*html_anchor(char *anchor, const char *s, size_t anchorsize);
 static void	html_font(man_state_t *state, man_font_t font);
 static void	html_footer(man_state_t *state);
-static void	html_header(man_state_t *state);
+static void	html_header(man_state_t *state, const char *title);
 static void	html_heading(man_state_t *state, man_heading_t heading, const char *s);
 static void	html_printf(const char *format, ...) __attribute__((__format__(__printf__, 1, 2)));
 static void	html_putc(int ch);
@@ -165,6 +167,18 @@ main(int  argc,				// I - Number of command-line args
     {
       // --help
       return (usage(NULL));
+    }
+    else if (!strcmp(argv[i], "--section"))
+    {
+      // --section "SECTION"
+      i ++;
+      if (i >= argc)
+      {
+        fputs("mantohtml: Missing section after --section.\n", stderr);
+        return (1);
+      }
+
+      state.section = argv[i];
     }
     else if (!strcmp(argv[i], "--subject"))
     {
@@ -290,7 +304,7 @@ convert_man(man_state_t *state,		// I - Current man state
 
         if (!state->wrote_header)
         {
-          html_header(state);
+          html_header(state, topic);
         }
         else
         {
@@ -845,7 +859,8 @@ html_footer(man_state_t *state)		// I - Current man state
 //
 
 static void
-html_header(man_state_t *state)		// I - Current man state
+html_header(man_state_t *state,		// I - Current man state
+            const char  *title)		// I - Title
 {
   if (state->wrote_header)
     return;
@@ -854,6 +869,10 @@ html_header(man_state_t *state)		// I - Current man state
 
   puts("<!DOCTYPE html>");
   puts("<html>");
+
+  if (state->section)
+    html_printf("<!-- SECTION: %s -->\n", state->section);
+
   puts("  <head>");
   if (state->css)
   {
@@ -892,7 +911,7 @@ html_header(man_state_t *state)		// I - Current man state
   puts("    <meta name=\"creator\" content=\"mantohtml v" VERSION "\">");
   if (state->subject)
     html_printf("    <meta name=\"subject\" content=\"%s\">\n", state->subject);
-  html_printf("    <title>%s</title>\n", state->title ? state->title : "Documentation");
+  html_printf("    <title>%s</title>\n", state->title ? state->title : title ? title : "Documentation");
   puts("  </head>");
   puts("  <body>");
   if (state->chapter)
@@ -964,15 +983,15 @@ html_heading(man_state_t   *state,	// I - Current man state
   switch (heading)
   {
     case MAN_HEADING_TOPIC :
-        html_printf("    <h%d id=\"%s\">", hlevel, html_anchor(state->topic, s, sizeof(state->topic)));
+        html_printf("    <h%d id=\"%s\">", hlevel, html_anchor(state->atopic, s, sizeof(state->atopic)));
         break;
 
     case MAN_HEADING_SECTION :
-        html_printf("    <h%d id=\"%s.%s\">", hlevel, state->topic, html_anchor(state->section, s, sizeof(state->section)));
+        html_printf("    <h%d id=\"%s.%s\">", hlevel, state->atopic, html_anchor(state->asection, s, sizeof(state->asection)));
         break;
 
     case MAN_HEADING_SUBSECTION :
-        html_printf("    <h%d id=\"%s.%s.%s\">", hlevel, state->topic, state->section, html_anchor(subsection, s, sizeof(subsection)));
+        html_printf("    <h%d id=\"%s.%s.%s\">", hlevel, state->atopic, state->asection, html_anchor(subsection, s, sizeof(subsection)));
         break;
   }
 

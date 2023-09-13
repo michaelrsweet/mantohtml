@@ -6,7 +6,7 @@
 .\" Licensed under Apache License v2.0.
 .\" <https://opensource.org/licenses/Apache-2.0>
 .\"
-.TH mantohtml 1 "2023-01-31"
+.TH mantohtml 1 "2023-09-13"
 .
 .SH NAME
 mantohtml \- convert man page source to html
@@ -27,6 +27,9 @@ mantohtml \- convert man page source to html
 .I CSS-FILE-OR-URL
 ] [
 .B \-\-help
+] [
+.B \-\-section
+.I SECTION
 ] [
 .B \-\-subject
 .I SUBJECT
@@ -69,6 +72,9 @@ Files are embedded inline with 'http:' and 'https:' URLs are referenced.
 .TP 5
 .B \-\-help
 Shows program help.
+.TP 5
+\fB\-\-section \fISECTION\fR
+Sets the section metadata of the HTML output.
 .TP 5
 \fB\-\-subject \fISUBJECT\fR
 Sets the subject metadata of the HTML output.
