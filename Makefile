@@ -1,7 +1,7 @@
 #
 # Makefile for man page to HTML conversion program.
 #
-# Copyright © 2022 by Michael R Sweet.
+# Copyright © 2022-2023 by Michael R Sweet.
 #
 # Licensed under Apache License v2.0.
 # <https://opensource.org/licenses/Apache-2.0>
@@ -14,7 +14,7 @@
 .SILENT:
 
 # Variables
-VERSION	=	2.0.1
+VERSION	=	2.0.2
 prefix	=	$(DESTDIR)/usr/local
 bindir	=	$(prefix)/bin
 mandir	=	$(prefix)/share/man

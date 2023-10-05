@@ -28,6 +28,12 @@
 #include <stdarg.h>
 #include <string.h>
 #include <ctype.h>
+#if _WIN32
+#  include <io.h>
+#  define access _access
+#else
+#  include <unistd.h>
+#endif // _WIN32
 #if !defined(__has_extension) && !defined(__GNUC__)
 #  define __attribute__(...)
 #endif // !__has_extension && !__GNUC__
@@ -57,6 +63,7 @@ typedef enum man_heading_e		// Man page heading levels
 typedef struct man_state_s		// Current man page state
 {
   bool		wrote_header;		// Did we write the HTML header?
+  char		basepath[1024];		// Source base path
   const char	*in_block;		// Current block element?
   bool		in_link;		// Are we in a link?
   size_t	indent;			// Indentation level
@@ -250,6 +257,24 @@ convert_man(man_state_t *state,		// I - Current man state
   {
     perror(filename);
     return;
+  }
+
+  if (strchr(filename, '/'))
+  {
+    // Calculate base path for man source...
+    char	*baseptr;		// Pointer into base path
+
+    safe_strcpy(state->basepath, filename, sizeof(state->basepath));
+
+    if ((baseptr = strrchr(state->basepath, '/')) != NULL)
+      *baseptr = '\0';
+    else
+      safe_strcpy(state->basepath, ".", sizeof(state->basepath));
+  }
+  else
+  {
+    // Assume the man source is in the current directory...
+    safe_strcpy(state->basepath, ".", sizeof(state->basepath));
   }
 
   while (man_gets(fp, line, sizeof(line), &linenum))
@@ -1524,9 +1549,45 @@ man_xx(man_state_t *state,		// I - Current man state
   // Loop until all words are written
   while (parse_value(word, &line, sizeof(word)))
   {
+    bool	have_link = false;	// Have a link?
+
+    if (a == MAN_FONT_BOLD && b == MAN_FONT_REGULAR && use_a)
+    {
+      char	section[256],		// Section (regular portion)
+		*secptr;		// Pointer into section
+      const char *saveline = line;	// Saved line pointer
+
+      if (parse_value(section, &saveline, sizeof(section)) && section[0] == '(' && isdigit(section[1] & 255) && (secptr = strchr(section, ')')) != NULL)
+      {
+        // Possibly convert ".BR name (section)" to hyperlink...
+        char	filename[1024];		// Man source file
+
+        *secptr = '\0';
+        snprintf(filename, sizeof(filename), "%s/%s.%s", state->basepath, word, section + 1);
+        if (!access(filename, 0))
+        {
+          // Have a "name.section" source file...
+          html_printf("<a href=\"%s.html\">", word);
+          have_link = true;
+        }
+      }
+    }
+
     html_font(state, use_a ? a : b);
-    use_a = !use_a;
     man_puts(state, word);
+
+    if (have_link && parse_value(word, &line, sizeof(word)))
+    {
+      // Show man page section and close the link...
+      html_font(state, b);
+      man_puts(state, word);
+      html_printf("</a>");
+    }
+    else
+    {
+      // Alternate fonts...
+      use_a = !use_a;
+    }
   }
 
   // Restore the original font...

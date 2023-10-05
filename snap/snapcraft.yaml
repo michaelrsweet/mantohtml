@@ -1,5 +1,5 @@
 name: mantohtml
-version: "2.0.1"
+version: "2.0.2"
 summary: Man page to HTML converter
 description: |
   mantohtml is a man page to HTML conversion program.  It supports all of the
